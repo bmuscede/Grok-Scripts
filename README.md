@@ -17,7 +17,7 @@ This repository is split into three different folders. Each folder contains scri
 
 Each repository has a readme that describes the variety of scripts one might encounter.
 
-##License
+## License
 Copyright (C) 2017, Bryan J. Muscedere
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
