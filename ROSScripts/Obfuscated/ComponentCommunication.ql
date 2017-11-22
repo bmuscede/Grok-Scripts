@@ -27,7 +27,7 @@ print "Direct Messages:"
 if (#direct < 1){
 	print "<None>";
 } else {
-	direct;
+	compContain o direct o inv compContain;
 }
 
 //Gets the indirect communications.
@@ -40,5 +40,5 @@ print "Indirect Messages:";
 if (#indirect < 1){
 	print "<None>";
 } else {
-	indirect;
+	compContain o indirect o inv compContain;
 }

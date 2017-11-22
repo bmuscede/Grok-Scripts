@@ -29,7 +29,7 @@ classComm = contain o (publish o subscribe) o (inv contain);
 direct = classComm ^ classes;
 print "Direct Component Loops:";
 if #direct > 0 {
-	inv @label o direct o @label;
+	direct;
 } else {
 	print "<NONE>";
 }
@@ -55,8 +55,9 @@ fullCall = (publish o subscribe) + call;
 fullCall = fullCall+;
 
 //Resolves the parents.
-dataflowComm = compContain o contain o publishSet o fullCall o subscribeSet o inv contain o inv compContain;
+dataflowComm = compContain o contain o publish o fullCall o subscribe o inv contain o inv compContain;
 dataflowLoop = dataflowComm ^ classes;
+dataflowLoop = dataflowLoop - direct;
 
 print "Dataflow Loops:"
 if #dataflowLoop > 0 {

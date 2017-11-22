@@ -30,10 +30,22 @@ comms = publishSet o fullCall o subscribeSet;
 comms = contain o comms o inv contain;
 comms = compContain o comms o inv compContain;
 
+//Gets a list of the direct communication.
+reach = compContain o (contain o (publish o subscribe) o inv contain) o inv compContain;
+direct = comms ^ reach;
+indirect = comms - reach;
+
 //Prints communication.
-print "Dataflow Communication:";
-if #comms > 0 {
-	inv @label o comms o @label;
+print "Direct Messages:";
+if #direct > 0 {
+	inv @label o direct o @label;
 } else {
 	print "<None>";
+}
+print "";
+print "Indirect Messages:";
+if #indirect > 0 {
+        inv @label o indirect o @label;
+} else {
+        print "<None>";
 }

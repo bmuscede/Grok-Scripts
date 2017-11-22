@@ -25,12 +25,13 @@ print "Direct Messages:"
 if (#direct < 1){
 	print "<None>";
 } else {
-	inv @label o direct o @label;
+	inv @label o (compContain o direct o inv compContain) o @label;
 }
 
 //Gets the indirect communications.
 indirect = direct+;
 indirect = indirect - direct;
+indirect = compContain o indirect o inv compContain;
 
 //Finally, resolve the plain-English class names.
 print "";

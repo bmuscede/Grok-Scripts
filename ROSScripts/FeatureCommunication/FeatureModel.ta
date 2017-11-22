@@ -1,0 +1,215 @@
+//Demo Rex Extraction
+//Author: Bryan J Muscedere
+
+SCHEME TUPLE :
+//Nodes
+$INHERIT	cArchitecturalNds	cRoot
+$INHERIT	cAsgNds			cRoot
+$INHERIT	rosMsg			cRoot
+$INHERIT	cComponent		cAsgNds
+$INHERIT	cClass			cAsgNds
+$INHERIT	cFunction		cAsgNds
+$INHERIT	cVariable		cAsgNds
+$INHERIT	rosTopic		rosMsg
+$INHERIT	rosPublisher		rosMsg
+$INHERIT	rosSubscriber		rosMsg
+$INHERIT	rosNodeHandle		rosMsg
+
+//Relationships
+compContain	cComponent	cClass
+contain		cRoot		cRoot
+publish		rosPublisher	rosTopic
+subscribe	rosTopic	rosSubscriber
+reference	rosNodeHandle	rosMsg
+advertise	rosPublisher	rosTopic
+call		cRoot		cRoot
+write		cFunction	cVariable
+read		cVariable	cFunction
+
+SCHEME ATTRIBUTE :
+$ENTITY {
+	x
+	y
+	width
+	height
+	label
+}
+
+cRoot {
+	elision = contain
+	color = (0.0 0.0 0.0)
+	file
+	line
+	name
+}
+
+cAsgNds {
+	beg
+	end
+	file
+	line
+	value
+	color = (0.0 0.0 0.0)
+}
+
+cArchitecturalNds {
+	class_style = 4
+	color = (0.0 0.0 1.0)
+	color = (0.0 0.0 0.0)
+}
+
+rosMsg {
+	class_style = 4
+	color = (0.0 0.0 1.0)
+}
+
+cComponent {
+	color = (0.7 0.3 0.1)
+	labelcolor = (0.0 0.0 0.0)
+	class_style = 2
+}
+
+cFunction {
+	filename
+	isStatic
+	isConst
+	isVolatile
+	isVariadic
+	visibility
+	color = (1.0 0.0 0.0)
+	labelcolor = (0.0 0.0 0.0)
+}
+
+cVariable {
+	filename
+	scopeType
+	isStatic
+	isControlFlow = 0
+	isPublisher = 0
+	isSubscriber = 0
+}
+
+cClass {
+	filename
+	baseNum
+	color = (0.2 0.4 0.1)
+	labelcolor = (0.0 0.0 0.0)
+	class_style = 2
+}
+
+rosSubscriber {
+	color = (0.4 1.0 0.4)
+	labelcolor = (0.0 0.0 0.0)
+	class_style = 6
+	bufferSize
+	numAttributes
+	rosNumber	
+	callbackFunc
+}
+
+rosPublisher {
+	color = (1.0 0.0 0.8)
+	labelcolor = (1.0 1.0 1.0)
+	class_style = 6
+	numAttributes
+	rosNumber
+	isUnderControl = 0
+}
+
+rosTopic {
+	color = (1.0 1.0 0.6)
+	labelcolor = (0.0 0.0 0.0)
+	class_style = 5
+}
+
+(call) {
+	isUnderControl = 0
+}
+
+FACT TUPLE :
+$INSTANCE radarSensor cComponent
+$INSTANCE bumperSensor cComponent
+$INSTANCE routePlanner cComponent
+$INSTANCE wheelActuator cComponent
+
+$INSTANCE radarNode cClass
+$INSTANCE radarLibrary cClass
+$INSTANCE radarPublish rosPublisher
+$INSTANCE accessRadarData cFunction
+$INSTANCE doRadarStuff cFunction
+
+$INSTANCE bumperNode cClass
+$INSTANCE bumperLibrary cClass
+$INSTANCE bumperPublish rosPublisher
+$INSTANCE accessBumperData cFunction
+$INSTANCE doBumperStuff cFunction
+$INSTANCE bumperLSub rosSubscriber
+
+$INSTANCE routeNode cClass
+$INSTANCE radarSub rosSubscriber
+$INSTANCE bumperSub rosSubscriber
+$INSTANCE routePublish rosPublisher
+$INSTANCE receiveRadar cFunction
+$INSTANCE receiveBumper cFunction
+$INSTANCE processData cFunction
+
+$INSTANCE wheelNode cClass
+$INSTANCE routeSub rosSubscriber
+$INSTANCE bumperLPub rosPublisher
+$INSTANCE receiveRoute cFunction
+$INSTANCE carryOutMotion cFunction
+
+$INSTANCE radarData rosTopic
+$INSTANCE bumperData rosTopic
+$INSTANCE routePlan rosTopic
+$INSTANCE bumperLoopback rosTopic
+
+compContain radarSensor radarNode
+compContain radarSensor radarLibrary
+compContain bumperSensor bumperNode
+compContain bumperSensor bumperLibrary
+compContain routePlanner routeNode
+compContain wheelActuator wheelNode
+
+contain radarNode radarPublish
+contain bumperNode bumperPublish
+contain bumperNode bumperLSub
+contain routeNode radarSub
+contain routeNode bumperSub
+contain routeNode routePublish
+contain wheelNode routeSub
+contain wheelNode bumperLPub
+contain radarNode accessRadarData
+contain radarLibrary doRadarStuff
+contain bumperNode accessBumperData
+contain bumperLibrary doBumperStuff
+contain routeNode receiveRadar
+contain routeNode receiveBumper
+contain routeNode processData
+contain wheelNode receiveRoute
+contain wheelNode carryOutMotion
+
+call accessRadarData doRadarStuff
+call accessRadarData radarPublish
+call accessBumperData doBumperStuff
+call accessBumperData bumperPublish
+call bumperLSub accessBumperData
+call radarSub receiveRadar
+call bumperSub receiveBumper
+call receiveRadar processData
+call processData routePublish
+call routeSub receiveRoute
+call receiveRoute carryOutMotion
+call receiveRoute bumperLPub
+
+publish radarPublish radarData
+publish bumperPublish bumperData
+publish routePublish routePlan
+publish bumperLPub bumperLoopback
+subscribe radarData radarSub
+subscribe bumperData bumperSub
+subscribe routePlan routeSub
+subscribe bumperLoopback bumperLSub
+
+FACT ATTRIBUTE :
+
