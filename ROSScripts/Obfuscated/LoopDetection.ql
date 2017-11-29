@@ -31,7 +31,7 @@ classComm = contain o (publish o subscribe) o (inv contain);
 direct = classComm ^ classes;
 print "Direct Component Loops:";
 if #direct > 0 {
-	direct;
+	compContain o direct o inv compContain;
 } else {
 	print "<NONE>";
 }
@@ -39,9 +39,9 @@ print "";
 
 //Get the indirect results.
 indirect = ((classComm+) ^ classes) - direct;
-print "Indirect Component Loops Loops:";
+print "Indirect Component Loops:";
 if #indirect > 0 {
-	indirect;
+	compContain o indirect o inv compContain;
 } else {
 	print "<NONE>";
 }
@@ -61,9 +61,17 @@ dataflowComm = compContain o contain o publish o fullCall o subscribe o inv cont
 dataflowLoop = dataflowComm ^ classes;
 dataflowLoop = dataflowLoop - direct;
 
-print "Dataflow Loops:"
+print "Direct Dataflow Loops:"
+if #direct > 0 {
+	compContain o direct o inv compContain;
+} else {
+        print "<None>";
+}
+print "";		
+
+print "Indirect Dataflow Loops:"
 if #dataflowLoop > 0 {
-	dataflowLoop;
+	compContain o dataflowLoop o inv compContain;
 } else {
 	print "<None>";
 }
