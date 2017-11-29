@@ -30,7 +30,11 @@ callbackControlVars = callbackVars o controlVars;
 
 //Display the subscribers and the variables they write to.
 print "Variables Written To In Callback Functions:";
-callbackControlVars;
+if #callbackControlVars > 0 {
+	callbackControlVars;
+} else {
+	print "<NONE>";
+}
 print "";
 
 //Next, we want to get the components which directly affect this component.
@@ -46,7 +50,17 @@ indirectComp = indirectComp - directComp;
 
 //Now, we display communications.
 print "Components Affecting the Behaviours of Other Components - Direct:";
-directComp;
+if #directComp > 0 {
+	compContain o directComp o inv compContain;
+} else {
+	print "<NONE>";
+}
 print "";
+
 print "Components Affecting the Behaviours of Other Components - Indirect:";
-indirectComp;
+if #indirectComp > 0 {
+	compContain o indirectComp o inv compContain;
+} else {
+	print "<NONE>";
+}
+
