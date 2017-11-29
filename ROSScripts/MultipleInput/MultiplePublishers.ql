@@ -25,7 +25,7 @@ inset = inset - (inset o {2});
 
 //Prints the results.
 print "Callback Functions that have Multiple Component Communications:"
-if (#inset == 0){
+if (#inset > 1){
 	print "<None>";
 	quit;
 } else {
