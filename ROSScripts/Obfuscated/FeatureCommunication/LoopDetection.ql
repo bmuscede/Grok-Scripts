@@ -11,6 +11,12 @@
 
 $INSTANCE = eset;
 
+//Prints a simple header.
+print "-----------------";
+print "LOOP DETECTION";
+print "-----------------";
+print "";
+
 //Sets the input file and loads.
 inputFile = $1;
 getta(inputFile);
@@ -65,7 +71,7 @@ print "Direct Dataflow Loops:"
 if #direct > 0 {
 	compContain o direct o inv compContain;
 } else {
-        print "<None>";
+        print "<NONE>";
 }
 print "";		
 
@@ -73,6 +79,7 @@ print "Indirect Dataflow Loops:"
 if #dataflowLoop > 0 {
 	compContain o dataflowLoop o inv compContain;
 } else {
-	print "<None>";
+	print "<NONE>";
 }
 
+print  "";

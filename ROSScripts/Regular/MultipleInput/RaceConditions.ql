@@ -6,6 +6,12 @@
 // through two different callback functions. This 
 ////////////////////////////////////////////////////////////////////////
 
+//Prints a simple header.
+print "-----------------";
+print "RACE CONDITIONS";
+print "-----------------";
+print "";
+
 //Sets the input file and loads.
 $INSTANCE = eset;
 inputFile = $1;
@@ -35,3 +41,5 @@ for item in rng vars {
 		print "";
 	}
 }
+
+print "";

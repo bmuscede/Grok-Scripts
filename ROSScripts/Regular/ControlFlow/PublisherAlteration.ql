@@ -5,6 +5,12 @@
 // Gets a list of publishers under control structures.
 ////////////////////////////////////////////////////////////////////////
 
+//Prints a simple header.
+print "-----------------";
+print "PUBLISHER ALTERATION";
+print "-----------------";
+print "";
+
 //Sets the input file and loads.
 $INSTANCE = eset;
 inputFile = $1;
@@ -23,6 +29,7 @@ callbackToPub = callbackVars o writeGraph o varInfluence;
 print "Callback Functions that Affect the Behaviour of Publications:"
 if #callbackToPub == 0 {
 	print "<NONE>";
+	print "";
 	quit;
 }
 inv @label o callbackToPub o @label;
@@ -37,3 +44,5 @@ if #compCalls > 0 {
 } else {
 	print "<NONE>";
 }
+
+print "";

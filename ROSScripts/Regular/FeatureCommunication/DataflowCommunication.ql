@@ -10,6 +10,12 @@
 
 $INSTANCE = eset;
 
+//Prints a simple header.
+print "-----------------";
+print "DATAFLOW COMMUNICATION";
+print "-----------------";
+print "";
+
 //Sets the input file and loads.
 inputFile = $1;
 getta(inputFile);
@@ -40,12 +46,14 @@ print "Direct Messages:";
 if #direct > 0 {
 	inv @label o direct o @label;
 } else {
-	print "<None>";
+	print "<NONE>";
 }
 print "";
 print "Indirect Messages:";
 if #indirect > 0 {
         inv @label o indirect o @label;
 } else {
-        print "<None>";
+        print "<NONE>";
 }
+
+print "";

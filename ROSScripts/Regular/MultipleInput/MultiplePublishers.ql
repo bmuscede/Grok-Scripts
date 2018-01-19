@@ -11,6 +11,12 @@
 
 $INSTANCE = eset;
 
+//Prints a simple header.
+print "-----------------";
+print "MULTIPLE PUBLISHERS";
+print "-----------------";
+print "";
+
 //Sets the input file and loads.
 inputFile = $1;
 getta(inputFile);
@@ -26,7 +32,8 @@ inset = inset - (inset o {2});
 //Prints the results.
 print "Callback Functions that have Multiple Component Communications:"
 if (#inset > 1){
-	print "<None>";
+	print "<NONE>";
+	print "";
 	quit;
 } else {
 	inv(@label) o inset;
@@ -48,3 +55,5 @@ for item in dom(inset) {
 	direct . {item};
 	print "";	
 }
+
+print "";

@@ -12,6 +12,12 @@
 
 $INSTANCE = eset;
 
+//Prints a simple header.
+print "-----------------";
+print "BEHAVIOUR ALTERATION";
+print "-----------------";
+print "";
+
 //Sets the input file and loads.
 inputFile = $1;
 getta(inputFile);
@@ -63,4 +69,6 @@ if #indirectComp > 0 {
 } else {
 	print "<NONE>";
 }
+
+print "";
 

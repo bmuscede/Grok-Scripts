@@ -11,6 +11,12 @@
  
 $INSTANCE = eset;
 
+//Prints a simple header.
+print "-----------------";
+print "COMPONENT-BASED COMMUNICATION";
+print "-----------------";
+print "";
+
 //Sets the input file and loads.
 inputFile = $1;
 getta(inputFile);
@@ -25,7 +31,7 @@ direct = direct o (inv (contain));
 //Finally, resolve the plain-English class names. 
 print "Direct Messages:"
 if (#direct < 1){
-	print "<None>";
+	print "<NONE>";
 } else {
 	compContain o direct o inv compContain;
 }
@@ -38,7 +44,9 @@ indirect = indirect - direct;
 print "";
 print "Indirect Messages:";
 if (#indirect < 1){
-	print "<None>";
+	print "<NONE>";
 } else {
 	compContain o indirect o inv compContain;
 }
+
+print "";
