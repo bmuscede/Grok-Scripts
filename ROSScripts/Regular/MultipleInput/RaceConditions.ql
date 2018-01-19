@@ -31,7 +31,6 @@ for item in rng vars {
 		for cb in callbacks {
 			//Get the publishers for that callback and resolves their component names.
 			{cb} . @label;
-			//for c in components { print "\t- " + c; }
 		}
 		print "";
 	}
