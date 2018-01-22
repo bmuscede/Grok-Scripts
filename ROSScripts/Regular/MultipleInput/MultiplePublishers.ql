@@ -21,22 +21,29 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
-//Gets topics that are written to.
+//Gets subscribers that are written to.
 direct = publish o subscribe;
-direct = inv @label o (contain o direct);
+direct = contain o direct;
 
 //Gets the indegree
 inset = indegree(direct);
-inset = inset - (inset o {2});
+
+//Purges communications with one instance.
+for entry in dom inset {
+	curNum = {entry} . inset;
+	if #(curNum - {"1"}) == 0 {
+		inset = inset - ({entry} X {"1"});
+	}
+}
 
 //Prints the results.
-print "Callback Functions that have Multiple Component Communications:"
-if (#inset > 1){
+print "Subscribers that have Multiple Component Communications:"
+if (#inset == 0){
 	print "<NONE>";
 	print "";
 	quit;
 } else {
-	inv(@label) o inset;
+	inv @label o inset;
 	print "";
 }
 
@@ -52,7 +59,7 @@ for item in dom(inset) {
 	for subItem in cFunction { for subsubItem in cClass { print "Callback Function " + subItem + " (" + subsubItem + ") - " } }
 	
 	//Get the publishers.
-	direct . {item};
+	inv @label o (compContain . (direct . {item}));
 	print "";	
 }
 

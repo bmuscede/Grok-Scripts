@@ -7,6 +7,8 @@
 // This script doesn't resolve MD5 hashes of IDs.
 ////////////////////////////////////////////////////////////////////////
 
+$INSTANCE = eset;
+
 //Prints a simple header.
 print "-----------------";
 print "PUBLISHER ALTERATION";
@@ -14,35 +16,62 @@ print "-----------------";
 print "";
 
 //Sets the input file and loads.
-$INSTANCE = eset;
 inputFile = $1;
 getta(inputFile);
 
-//Next, gets a set of variables written to inside callback functions.
+//Gets a list of subscribers.
 subs = $INSTANCE . {"rosSubscriber"};
+
+//Get the direct component calls.
+direct = publish o subscribe;
+
+//Get any variables that have a control flow of 1.
+controlVars = @isControlFlow . {"\"1\""};
 callbackFuncs = subs . call;
-callbackVars = callbackFuncs o write;
+callbackControlVars = callbackFuncs o write;
 
-//Takes the varWrites and computes the transitive closure.
-writeGraph = varWrite+;
-callbackToPub = callbackVars o writeGraph o varInfluence;
-
-//Print the results.
-print "Callback Functions that Affect the Behaviour of Publications:"
-if #callbackToPub == 0 {
-	print "<NONE>";
-	print "";
-	quit;
+//Display the subscribers and the variables they write to.
+print "Variables Written To In Callback Functions:";
+if #callbackControlVars > 0 {
+        callbackControlVars;
+} else {
+        print "<NONE>";
 }
-inv @label o callbackToPub o @label;
 print "";
 
-//Get the direct calls.
-compCalls = contain o publish o subscribe o call o callbackToPub o inv contain;
+//Gets the transitive closure of write influences.
+transWrite = varWrite+;
+transWrite = callbackControlVars o transWrite;
+callbackControlVars = callbackControlVars + transWrite;
 
-print "Components that Cause Another Component to Publish:";
-if #compCalls > 0 {
-	inv @label o (compContain o compCalls o inv compContain) o @label;
+//Now, gets the components that cause others to publish.
+callbackToPub = callbackControlVars o varInfluence;
+
+//Pushes up the range of the relation.
+direct = compContain o contain o (publish o subscribe o call o callbackToPub) o inv contain o inv compContain;
+
+print "Components that Affect An Other Component's Publish Behaviour - Direct:"
+if #direct > 0 {
+	direct;
+} else  {
+	print "<NONE>";
+}
+print "";
+
+//Gets the indirect cases from a dataflow basis.
+totalMsg = (publish o subscribe) + call;
+totalMsg = totalMsg+;
+indirect = totalMsg o (call . dom callbackToPub);
+
+//Pushes up the relation.
+indirect = compContain o contain o indirect o inv contain o inv compContain;
+indirect = indirect - direct;
+
+print "Components that Affect An Other Component's Publish Behaviour - Indirect:"
+if #indirect > 0 {
+	indirect;
 } else {
 	print "<NONE>";
 }
+
+print "";

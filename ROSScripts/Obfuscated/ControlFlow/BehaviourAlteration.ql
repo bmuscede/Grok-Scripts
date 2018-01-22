@@ -48,11 +48,15 @@ directDst = (subs o call) . dom (callbackControlVars);
 directComp = direct o directDst;
 directComp = contain o directComp o (inv (contain));
 
-//Finally, we get the components which indirectly affect this component.
-direct = (contain o direct) o (inv (contain));
-indirect = direct+;
-indirectComp = indirect o (contain . directDst);
-indirectComp = indirectComp - directComp;
+//Gets the indirect cases from a dataflow basis.
+totalMsg = direct + call;
+totalMsg = totalMsg+;
+indirect = totalMsg o dom directDst;
+indirect;
+print ""
+//Gets the upper components.
+indirect = contain o indirect o inv contain;
+indirect = indirect - directComp;
 
 //Now, we display communications.
 print "Components Affecting the Behaviours of Other Components - Direct:";
@@ -64,8 +68,8 @@ if #directComp > 0 {
 print "";
 
 print "Components Affecting the Behaviours of Other Components - Indirect:";
-if #indirectComp > 0 {
-	compContain o indirectComp o inv compContain;
+if #indirect > 0 {
+	compContain o indirect o inv compContain;
 } else {
 	print "<NONE>";
 }
