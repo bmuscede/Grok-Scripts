@@ -7,7 +7,7 @@
 // program's control structure. This can occur in
 // the current function or other functions in the component.
 //
-// This script doesn't resolve MD5 hashes of IDs.
+// Doesn't resolve IDs of MD5 hashes. Keeps IDs obfuscated.
 ////////////////////////////////////////////////////////////////////////
 
 $INSTANCE = eset;
@@ -36,8 +36,8 @@ callbackControlVars = callbackVars o controlVars;
 
 //Display the subscribers and the variables they write to.
 print "Variables Written To In Callback Functions:";
-if #callbackControlVars > 0 {
-	callbackControlVars;
+if #callbackVars > 0 {
+	callbackVars;
 } else {
 	print "<NONE>";
 }
@@ -52,8 +52,7 @@ directComp = contain o directComp o (inv (contain));
 totalMsg = direct + call;
 totalMsg = totalMsg+;
 indirect = totalMsg o dom directDst;
-indirect;
-print ""
+
 //Gets the upper components.
 indirect = contain o indirect o inv contain;
 indirect = indirect - directComp;
@@ -73,6 +72,4 @@ if #indirect > 0 {
 } else {
 	print "<NONE>";
 }
-
-print "";
 

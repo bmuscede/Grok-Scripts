@@ -20,9 +20,6 @@ getta(inputFile);
 //Get a list of callback functions.
 callbackFunc = rng (subscribe o call);
 
-//Gets component messages to callbacks.
-compMsg = publish o subscribe o call;
-
 //Determines all the variables that are written to by each callback function.
 vars = callbackFunc o write;
 for item in rng vars {
