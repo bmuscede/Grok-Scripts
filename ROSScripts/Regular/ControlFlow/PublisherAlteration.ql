@@ -26,12 +26,13 @@ direct = publish o subscribe;
 //Get any variables that have a control flow of 1.
 controlVars = @isControlFlow . {"\"1\""};
 callbackFuncs = subs . call;
-callbackControlVars = callbackFuncs o write;
+callbackVars = callbackFuncs o write;
+callbackControlVars = callbackVars o controlVars;
 
 //Display the subscribers and the variables they write to.
 print "Variables Written To In Callback Functions:";
 if #callbackControlVars > 0 {
-        inv @label o callbackControlVars o @label;
+        inv @label o callbackVars o @label;
 } else {
         print "<NONE>";
 }
@@ -39,7 +40,7 @@ print "";
 
 //Gets the transitive closure of write influences.
 transWrite = varWrite+;
-transWrite = callbackControlVars o transWrite;
+transWrite = callbackVars o transWrite o controlVars;
 callbackControlVars = callbackControlVars + transWrite;
 
 //Now, gets the components that cause others to publish.

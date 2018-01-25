@@ -34,8 +34,8 @@ callbackControlVars = callbackVars o controlVars;
 
 //Display the subscribers and the variables they write to.
 print "Variables Written To In Callback Functions:";
-if #callbackControlVars > 0 {
-	inv @label o callbackControlVars o @label;
+if #callbackVars > 0 {
+	inv @label o callbackVars o @label;
 } else {
 	print "<NONE>";
 }
@@ -50,8 +50,7 @@ directComp = contain o directComp o (inv (contain));
 totalMsg = direct + call;
 totalMsg = totalMsg+;
 indirect = totalMsg o dom directDst;
-indirect;
-print ""
+
 //Gets the upper components.
 indirect = contain o indirect o inv contain;
 indirect = indirect - directComp;
