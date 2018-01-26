@@ -4,7 +4,7 @@
 //
 // Gets a list of publishers under control structures.
 //
-// Doesn't resolve IDs of MD5 hashes. Keeps IDs obfuscated.
+// This script doesn't resolve MD5 hashes of IDs.
 ////////////////////////////////////////////////////////////////////////
 
 $INSTANCE = eset;
@@ -21,6 +21,7 @@ getta(inputFile);
 
 //Gets a list of subscribers.
 subs = $INSTANCE . {"rosSubscriber"};
+pubs = $INSTANCE . {"rosPublisher"};
 
 //Get the direct component calls.
 direct = publish o subscribe;
@@ -34,7 +35,7 @@ callbackControlVars = callbackVars o controlVars;
 //Display the subscribers and the variables they write to.
 print "Variables Written To In Callback Functions:";
 if #callbackControlVars > 0 {
-       	callbackVars;
+        callbackVars;
 } else {
         print "<NONE>";
 }
@@ -48,8 +49,25 @@ callbackControlVars = callbackControlVars + transWrite;
 //Now, gets the components that cause others to publish.
 callbackToPub = callbackControlVars o varInfluence;
 
+//Gets the variables that influence function calls.
+callbackToFunc = callbackControlVars o varInfFunc;
+directFunc = callbackToFunc o (call o pubs);
+indirectFunc = callbackToFunc o ((call+) o pubs); 
+callbackToFunc = directFunc + indirectFunc;
+
 //Pushes up the range of the relation.
-direct = compContain o contain o (publish o subscribe o call o callbackToPub) o inv contain o inv compContain;
+callback = callbackToPub + callbackToFunc;
+direct = compContain o contain o (publish o subscribe o call o callback) o inv contain o inv compContain;
+
+topDirect = subscribe o call o callback o inv contain o inv compContain;
+
+print "Topics that Affect An Other Component's Publish Behaviour:";
+if #topDirect > 0 {
+	topDirect;
+} else {
+	print "<NONE>";
+}
+print "";
 
 print "Components that Affect An Other Component's Publish Behaviour - Direct:"
 if #direct > 0 {

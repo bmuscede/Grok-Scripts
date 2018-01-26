@@ -7,7 +7,7 @@
 // program's control structure. This can occur in
 // the current function or other functions in the component.
 //
-// Doesn't resolve IDs of MD5 hashes. Keeps IDs obfuscated.
+// This script doesn't resolve MD5 hashes of IDs.
 ////////////////////////////////////////////////////////////////////////
 
 $INSTANCE = eset;
@@ -58,6 +58,14 @@ indirect = contain o indirect o inv contain;
 indirect = indirect - directComp;
 
 //Now, we display communications.
+print "Topics Affecting the Behaviours of Other Components:";
+if #directDst > 0 {
+	subscribe o directDst o inv contain o inv compContain; 
+} else {
+	print  "<NONE>";
+}
+print "";
+
 print "Components Affecting the Behaviours of Other Components - Direct:";
 if #directComp > 0 {
 	compContain o directComp o inv compContain;

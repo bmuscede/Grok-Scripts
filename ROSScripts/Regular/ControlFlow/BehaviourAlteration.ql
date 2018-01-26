@@ -56,6 +56,14 @@ indirect = contain o indirect o inv contain;
 indirect = indirect - directComp;
 
 //Now, we display communications.
+print "Topics Affecting the Behaviours of Other Components:";
+if #directDst > 0 {
+	inv @label o subscribe o directDst o inv contain o inv compContain o @label; 
+} else {
+	print  "<NONE>";
+}
+print "";
+
 print "Components Affecting the Behaviours of Other Components - Direct:";
 if #directComp > 0 {
 	inv @label o compContain o directComp o inv compContain o @label;
