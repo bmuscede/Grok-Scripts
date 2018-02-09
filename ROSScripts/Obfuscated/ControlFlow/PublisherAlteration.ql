@@ -2,7 +2,11 @@
 // Publisher Alteration [OBFUSCATED]
 // By: Bryan J Muscedere
 //
-// Gets a list of publishers under control structures.
+// Detects whether a callback function "eventually" modifies a 
+// variable that participates in the decision portion of a control
+// structure that causes a publish call to operate. That or whether
+// a publish call is made in the body of a function that is activated
+// by a callback function.
 //
 // This script doesn't resolve MD5 hashes of IDs.
 ////////////////////////////////////////////////////////////////////////
@@ -19,78 +23,54 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
-//Gets a list of subscribers.
-subs = $INSTANCE . {"rosSubscriber"};
-pubs = $INSTANCE . {"rosPublisher"};
+//Gets the relations important for all phases.
+direct = contain o publish o subscribe o call;
+indirect = contain o publish o subscribe o inv contain;
+indirect = indirect+;
 
-//Get the direct component calls.
-direct = publish o subscribe;
+callbackFuncs = rng(subscribe o call);
+masterRel = varWrite + varInfluence + varInfFunc + call + write;
+masterRel = masterRel+;
 
-//Get any variables that have a control flow of 1.
-controlVars = @isControlFlow . {"\"1\""};
-callbackFuncs = subs . call;
-callbackVars = callbackFuncs o write;
-callbackControlVars = callbackVars o controlVars;
+//Gets all publisher alterations.
+pubAlter = callbackFuncs o masterRel o publish;
 
-//Display the subscribers and the variables they write to.
-print "Variables Written To In Callback Functions:";
-if #callbackControlVars > 0 {
-        callbackVars;
+//Print the results.
+if #pubAlter > 0 {
+	print "There are " + #pubAlter + " cases of publisher alteration.";
+	print "";
 } else {
-        print "<NONE>";
-}
-print "";
-
-//Gets the transitive closure of write influences.
-transWrite = varWrite+;
-transWrite = callbackVars o transWrite o controlVars;
-callbackControlVars = callbackControlVars + transWrite;
-
-//Now, gets the components that cause others to publish.
-callbackToPub = callbackControlVars o varInfluence;
-
-//Gets the variables that influence function calls.
-callbackToFunc = callbackControlVars o varInfFunc;
-directFunc = callbackToFunc o (call o pubs);
-indirectFunc = callbackToFunc o ((call+) o pubs); 
-callbackToFunc = directFunc + indirectFunc;
-
-//Pushes up the range of the relation.
-callback = callbackToPub + callbackToFunc;
-direct = compContain o contain o (publish o subscribe o call o callback) o inv contain o inv compContain;
-
-topDirect = subscribe o call o callback o inv contain o inv compContain;
-
-print "Topics that Affect An Other Component's Publish Behaviour:";
-if #topDirect > 0 {
-	topDirect;
-} else {
-	print "<NONE>";
-}
-print "";
-
-print "Components that Affect An Other Component's Publish Behaviour - Direct:"
-if #direct > 0 {
-	direct;
-} else  {
-	print "<NONE>";
-}
-print "";
-
-//Gets the indirect cases from a dataflow basis.
-totalMsg = (publish o subscribe) + call;
-totalMsg = totalMsg+;
-indirect = totalMsg o (call . dom callbackToPub);
-
-//Pushes up the relation.
-indirect = compContain o contain o indirect o inv contain o inv compContain;
-indirect = indirect - direct;
-
-print "Components that Affect An Other Component's Publish Behaviour - Indirect:"
-if #indirect > 0 {
-	indirect;
-} else {
-	print "<NONE>";
+	print "There are no cases of publisher alteration.";
+	quit;
 }
 
-print "";
+//Loops through and presents the results.
+for item in dom pubAlter {
+	print "---------------------------------------------------------";
+	print item;
+	print "";
+	
+	print "Writes to Topics:"
+	{item} . pubAlter;
+	print "";
+
+	dirInf = direct . {item};
+	print "Influenced By - Direct:";
+	if (#dirInf > 0) {
+		dirInf;
+	} else {
+		print "<NONE>";
+	}
+	print "";
+	
+	inInf = indirect . (direct . {item});
+	print "Influenced By - Indirect:";
+	inInf = inInf - dirInf;
+	if (#inInf > 0) {
+	        inInf;
+	} else {
+		print "<NONE>";
+	}
+
+	print "---------------------------------------------------------";
+}

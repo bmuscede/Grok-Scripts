@@ -2,10 +2,9 @@
 // Behaviour Alteration [OBFUSCATED]
 // By: Bryan J Muscedere
 //
-// Detects all interactions where some callback function
-// writes to a variable that goes on to affect the
-// program's control structure. This can occur in
-// the current function or other functions in the component.
+// Detects whether a variable that modifies a control structure
+// is written to by a callback function. Follows the flow of the
+// data up until the variable.
 //
 // This script doesn't resolve MD5 hashes of IDs.
 ////////////////////////////////////////////////////////////////////////
@@ -22,62 +21,56 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
-//Gets a list of subscribers.
-subs = $INSTANCE . {"rosSubscriber"};
+//Gets the relations important for all phases.
+direct = contain o publish o subscribe o call;
+indirect = contain o publish o subscribe o inv contain;
+indirect = indirect+;
 
-//Get the direct component calls.
-direct = publish o subscribe;
+//Generates relations 
+callbackFuncs = rng(subscribe o call);
+controlFlowVars = @isControlFlow . {"\"1\""};
+masterRel = varWrite + call + write;
+masterRel = masterRel+;
 
-//Gets the variables that have a control flow of 1.
-controlVars = @isControlFlow . {"\"1\""}
-callbackFuncs = subs . call;
-callbackVars = callbackFuncs o write;
-callbackControlVars = callbackVars o controlVars;
+//Gets the behaviour alterations.
+behAlter = callbackFuncs o masterRel o controlFlowVars;
 
-//Display the subscribers and the variables they write to.
-print "Variables Written To In Callback Functions:";
-if #callbackVars > 0 {
-	callbackVars;
+//Print the results.
+if #behAlter > 0 {
+	print "There are " + #behAlter + " cases of behaviour alteration across " + #(dom behAlter) + " callback functions.";
+	print "";
 } else {
-	print "<NONE>";
-}
-print "";
-
-//Next, we want to get the components which directly affect this component.
-directDst = (subs o call) . dom (callbackControlVars);
-directComp = direct o directDst;
-directComp = contain o directComp o (inv (contain));
-
-//Gets the indirect cases from a dataflow basis.
-totalMsg = direct + call;
-totalMsg = totalMsg+;
-indirect = totalMsg o dom directDst;
-
-//Gets the upper components.
-indirect = contain o indirect o inv contain;
-indirect = indirect - directComp;
-
-//Now, we display communications.
-print "Topics Affecting the Behaviours of Other Components:";
-if #directDst > 0 {
-	subscribe o directDst o inv contain o inv compContain; 
-} else {
-	print  "<NONE>";
-}
-print "";
-
-print "Components Affecting the Behaviours of Other Components - Direct:";
-if #directComp > 0 {
-	compContain o directComp o inv compContain;
-} else {
-	print "<NONE>";
-}
-print "";
-
-print "Components Affecting the Behaviours of Other Components - Indirect:";
-if #indirect > 0 {
-	compContain o indirect o inv compContain;
-} else {
-	print "<NONE>";
+        print "There are no cases of behaviour alteration.";
+        quit;
 }
 
+//Loops through and presents the results.
+for item in dom behAlter {
+	print "---------------------------------------------------------";
+	print item;
+	print "";
+
+	print "Affects Variables:"
+	{item} . behAlter;
+	print "";
+
+	print "Influenced By - Direct:"
+	dirInf = direct . {item};
+	if (#dirInf > 0) {
+		dirInf;
+	} else {
+		print "<NONE>";
+	}
+	print "";
+
+	inInf = indirect . (direct . {item});
+	print "Influenced By - Indirect:";
+	inInf = inInf - dirInf;
+	if (#inInf > 0) {
+		inInf;
+	} else {
+		print "<NONE>";
+	}
+
+        print "---------------------------------------------------------";
+}
