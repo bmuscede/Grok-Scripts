@@ -1,11 +1,10 @@
-///////////////////////////////////
-//funcDepends.ql
+////////////////////////////////////////////////////////////////////////
+// Function Depends On
+// By: Bryan J Muscedere
 //
-//Prints the dependencies for a
-//function based on some call graph.
-//This will look at any function
-//calls BELOW some function.
-///////////////////////////////////
+//Prints the dependencies for a function based on some call graph.
+//This will look at any function calls BELOW some function.
+////////////////////////////////////////////////////////////////////////
 
 //Generates the empty set and loads TA file.
 $INSTANCE = eset;
