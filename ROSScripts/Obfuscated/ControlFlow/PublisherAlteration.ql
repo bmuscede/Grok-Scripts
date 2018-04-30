@@ -47,7 +47,7 @@ if #pubAlter > 0 {
 //Loops through and presents the results.
 for item in dom pubAlter {
 	print "---------------------------------------------------------";
-	print item;
+	item;
 	print "";
 	
 	print "Writes to Topics:"

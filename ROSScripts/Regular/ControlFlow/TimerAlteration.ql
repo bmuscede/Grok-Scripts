@@ -49,7 +49,7 @@ if #timerAlter > 0 {
 for timer in dom timerAlter {
 	print "---------------------------------------------------------";
 	print "Timer:"
-	print {timer} . @label;
+	{timer} . @label;
 	print "";
 	
 	print "Writes to Topics:"
@@ -59,7 +59,7 @@ for timer in dom timerAlter {
 	dirInf = {timer} . timerAlter . direct;
 	print "Directly Influences:";
 	if (#dirInf > 0) {
-		print inv @label . dirInf;
+		inv @label . dirInf;
 	} else {
 		print "<NONE>";
 	}
@@ -69,7 +69,7 @@ for timer in dom timerAlter {
 	print "Indirectly Influences:";
 	inInf = inInf - dirInf;
 	if (#inInf > 0) {
-	        print inv @label . inInf;
+	        inv @label . inInf;
 	} else {
 		print "<NONE>";
 	}

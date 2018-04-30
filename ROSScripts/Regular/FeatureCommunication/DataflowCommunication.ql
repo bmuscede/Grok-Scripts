@@ -20,40 +20,38 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
+//Gets the direct communications
+direct = contain o (publish o subscribe) o (inv contain);
+
+//Combines publishers and subscribers with function calls.
+rosComm = publish o subscribe;
+fullCall = rosComm + call;
+fullCall = fullCall+;
+
 //Gets a list of publishers and subscribers.
 publishSet = $INSTANCE . {"rosPublisher"};
 subscribeSet = $INSTANCE . {"rosSubscriber"};
 
-//Next, combines publish and subscribe.
-rosComm = publish o subscribe;
-
-//Then combines the publish to subscribe communication with the call graph.
-fullCall = rosComm + call;
-fullCall = fullCall+;
-
-//Next, upgrades the relations.
+//Ensures publishers start and subscribers end.
 comms = publishSet o fullCall o subscribeSet;
-comms = contain o comms o inv contain;
-comms = compContain o comms o inv compContain;
 
-//Gets a list of the direct communication.
-reach = compContain o (contain o (publish o subscribe) o inv contain) o inv compContain;
-direct = comms ^ reach;
-indirect = comms - reach;
+//Gets the indirect communication.
+indirect = contain o comms o inv contain;
+indirect = indirect - direct;
 
 //Prints communication.
 print "Direct Messages:";
 if #direct > 0 {
-	inv @label o direct o @label;
+	inv @label o (compContain o direct o inv compContain) o @label;
 } else {
 	print "<NONE>";
 }
 print "";
+
 print "Indirect Messages:";
 if #indirect > 0 {
-        inv @label o indirect o @label;
+        inv @label o (compContain o indirect o inv compContain) o @label;
 } else {
         print "<NONE>";
 }
-
 print "";

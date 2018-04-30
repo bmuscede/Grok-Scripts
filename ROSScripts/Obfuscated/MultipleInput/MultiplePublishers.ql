@@ -19,10 +19,6 @@ print "MULTIPLE PUBLISHERS";
 print "-----------------";
 print "";
 
-//Sets the input file and loads.
-inputFile = $1;
-getta(inputFile);
-
 //Gets subscribers that are written to.
 direct = publish o subscribe;
 direct = contain o direct;
@@ -30,13 +26,8 @@ direct = contain o direct;
 //Gets the indegree
 inset = indegree(direct);
 
-//Purges communications with one instance.
-for entry in dom inset {
-	curNum = {entry} . inset;
-	if #(curNum - {"1"}) == 0 {
-		inset = inset - ({entry} X {"1"});
-	}
-}
+//Removes items from indegree.
+inset = inset [ &1 > 1 ];
 
 //Prints the results.
 print "Subscribers that have Multiple Component Communications:"
@@ -45,24 +36,20 @@ if (#inset == 0){
 	print "";
 	quit;
 } else {
-	inset;
+	compContain . dom inset;
 	print "";
 }
 
 //Now, dives deeper.
 for item in dom(inset) {
 	cbFunc = {item} . call;
-	cFunction = (rng cbFunc);
-	cClass = rng((dom(contain o rng{item})));
+	cFunction = cbFunc;
+	cClass = contain . {item};
 
-	//Fix to be able to print names. For loop converts sets to strings for some reason.
-	//It means I can print them using the concatination operator.
-	//This seems to be a QL specific glitch.
+	//Print the item.
 	for subItem in cFunction { for subsubItem in cClass { print "Callback Function " + subItem + " (" + subsubItem + ") - " } }
 	
 	//Get the publishers.
 	compContain . (direct . {item});
 	print "";	
 }
-
-print "";

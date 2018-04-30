@@ -3,8 +3,7 @@
 // By: Bryan J Muscedere
 //
 // This detector determines whether there are loops in the communication
-// pathway. This considers barebones communications between components
-// as well as through the dataflow.
+// pathway. This considers barebones communications between components.
 ////////////////////////////////////////////////////////////////////////
 
 $INSTANCE = eset;
@@ -20,52 +19,27 @@ inputFile = $1;
 getta(inputFile);
 
 //Generates a list of classes pointing back to themselves.
-classes = $INSTANCE . {"cClass"}
-classes = (classes o contain) o inv contain;
+loopTest = id ($INSTANCE . {"cClass"});
 
-//Start with component loops.
-print "=================================================";
-print "COMPONENT LOOPS"
-print "=================================================";
-
-//Gets the components that communicate.
-classComm = contain o (publish o subscribe) o (inv contain);
-
-//Prints the results.
-direct = classComm ^ classes;
-print "Direct Component Loops:";
-if #direct > 0 {
-	inv @label o (compContain o direct o inv compContain) o @label;
-} else {
-	print "<NONE>";
-}
-print "";
-
-//Get the indirect results.
-indirect = ((classComm+) ^ classes) - direct;
-print "Indirect Component Loops:";
-if #indirect > 0 {
-	inv @label o (compContain o indirect o inv compContain) o @label;
-} else {
-	print "<NONE>";
-}
-print "";
-
-//Next, gets dataflow component loops.
-print "=================================================";
-print "DATAFLOW LOOPS";
-print "=================================================";
-
-//Gets the call graph.
+//Generates the call graph.
 fullCall = (publish o subscribe) + call;
 fullCall = fullCall+;
 
-//Resolves the parents.
-dataflowComm = compContain o contain o publish o fullCall o subscribe o inv contain o inv compContain;
-dataflowLoop = dataflowComm ^ classes;
-dataflowLoop = dataflowLoop - direct;
+//Generates the direct loops.
+classComm = contain o (publish o subscribe) o (inv contain);
+direct = classComm ^ loopTest;
 
-print "Direct Dataflow Loops:"
+//Gets a list of publishers and subscribers.
+publishSet = $INSTANCE . {"rosPublisher"};
+subscribeSet = $INSTANCE . {"rosSubscriber"};
+
+//Gets the dataflow indirect results.
+comm = contain o publishSet o fullCall o subscribeSet o inv contain;
+indirect = comm ^ loopTest;
+indirect = indirect - direct;
+
+//Print the results
+print "Direct Loops:"
 if #direct > 0 {
 	inv @label o (compContain o direct o inv compContain) o @label;
 } else {
@@ -73,12 +47,11 @@ if #direct > 0 {
 }
 print "";		
 
-print "Indirect Dataflow Loops:"
-if #dataflowLoop > 0 {
-	inv @label o (compContain o dataflowLoop o inv compContain) o @label;
+print "Indirect Loops:"
+if #indirect > 0 {
+	inv @label o (compContain o indirect o inv compContain) o @label;
 } else {
 	print "<None>";
 }
-
 print "";
 

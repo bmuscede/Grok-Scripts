@@ -45,7 +45,7 @@ if #pubAlter > 0 {
 //Loops through and presents the results.
 for item in dom pubAlter {
 	print "---------------------------------------------------------";
-	print {item} . @label;
+	{item} . @label;
 	print "";
 	
 	print "Writes to Topics:"
@@ -55,7 +55,7 @@ for item in dom pubAlter {
 	dirInf = direct . {item};
 	print "Influenced By - Direct:";
 	if (#dirInf > 0) {
-		print inv @label . dirInf;
+		inv @label . dirInf;
 	} else {
 		print "<NONE>";
 	}
@@ -65,7 +65,7 @@ for item in dom pubAlter {
 	print "Influenced By - Indirect:";
 	inInf = inInf - dirInf;
 	if (#inInf > 0) {
-	        print inv @label . inInf;
+	       	inv @label . inInf;
 	} else {
 		print "<NONE>";
 	}

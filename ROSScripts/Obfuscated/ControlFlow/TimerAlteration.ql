@@ -51,7 +51,7 @@ if #timerAlter > 0 {
 for timer in dom timerAlter {
 	print "---------------------------------------------------------";
 	print "Timer:"
-	print timer;
+	timer
 	print "";
 	
 	print "Writes to Topics:"
@@ -71,7 +71,7 @@ for timer in dom timerAlter {
 	print "Indirectly Influences:";
 	inInf = inInf - dirInf;
 	if (#inInf > 0) {
-	        inInf;
+	      	inInf;
 	} else {
 		print "<NONE>";
 	}

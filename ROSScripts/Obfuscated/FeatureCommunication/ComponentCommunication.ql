@@ -8,7 +8,7 @@
 //
 // This script doesn't resolve MD5 hashes of IDs.
 ////////////////////////////////////////////////////////////////////////
- 
+
 $INSTANCE = eset;
 
 //Prints a simple header.
@@ -21,12 +21,9 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
-//Ges the direct communications.
-direct = publish o subscribe;
-
-//Now, resolves the classes.
-direct = contain o direct;
-direct = direct o (inv (contain));
+//Performs lifting and gets direct/indirect calls.
+direct = contain o (publish o subscribe) o (inv contain);
+indirect = (direct+) - direct;
 
 //Finally, resolve the plain-English class names. 
 print "Direct Messages:"
@@ -35,10 +32,6 @@ if (#direct < 1){
 } else {
 	compContain o direct o inv compContain;
 }
-
-//Gets the indirect communications.
-indirect = direct+;
-indirect = indirect - direct;
 
 //Finally, resolve the plain-English class names.
 print "";

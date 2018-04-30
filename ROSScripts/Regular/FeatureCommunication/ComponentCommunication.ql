@@ -19,12 +19,9 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
-//Ges the direct communications.
-direct = publish o subscribe;
-
-//Now, resolves the classes.
-direct = contain o direct;
-direct = direct o (inv (contain));
+//Performs lifting and gets direct/indirect calls.
+direct = contain o (publish o subscribe) o (inv contain);
+indirect = (direct+) - direct;
 
 //Finally, resolve the plain-English class names. 
 print "Direct Messages:"
@@ -34,18 +31,13 @@ if (#direct < 1){
 	inv @label o (compContain o direct o inv compContain) o @label;
 }
 
-//Gets the indirect communications.
-indirect = direct+;
-indirect = indirect - direct;
-indirect = compContain o indirect o inv compContain;
-
 //Finally, resolve the plain-English class names.
 print "";
 print "Indirect Messages:";
 if (#indirect < 1){
 	print "<NONE>";
 } else {
-	inv @label o indirect o @label;
+	inv @label o (compContain o indirect o inv compContain) o @label;
 }
 
 print "";

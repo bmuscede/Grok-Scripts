@@ -21,15 +21,15 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
-//Gets the relations important for all phases.
+//Gets the direct and indirect relations.
 direct = contain o publish o subscribe o call;
 indirect = contain o publish o subscribe o inv contain;
 indirect = indirect+;
 
-//Generates relations 
+//Generates relations to track the flow of data.
 callbackFuncs = rng(subscribe o call);
 controlFlowVars = @isControlFlow . {"\"1\""};
-masterRel = varWrite + call + write;
+masterRel = varWrite + call + write + varInfFunc;
 masterRel = masterRel+;
 
 //Gets the behaviour alterations.
@@ -47,7 +47,7 @@ if #behAlter > 0 {
 //Loops through and presents the results.
 for item in dom behAlter {
 	print "---------------------------------------------------------";
-	print item;
+	item;
 	print "";
 
 	print "Affects Variables:"
