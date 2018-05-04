@@ -53,7 +53,7 @@ print "Indirect Loops:"
 if #indirect > 0 {
 	compContain o indirect o inv compContain;
 } else {
-	print "<None>";
+	print "<NONE>";
 }
 print "";
 

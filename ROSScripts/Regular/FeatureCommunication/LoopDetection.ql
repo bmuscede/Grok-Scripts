@@ -51,7 +51,7 @@ print "Indirect Loops:"
 if #indirect > 0 {
 	inv @label o (compContain o indirect o inv compContain) o @label;
 } else {
-	print "<None>";
+	print "<NONE>";
 }
 print "";
 
