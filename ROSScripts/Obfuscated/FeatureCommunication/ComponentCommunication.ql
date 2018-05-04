@@ -13,7 +13,7 @@ $INSTANCE = eset;
 
 //Prints a simple header.
 print "-----------------";
-print "COMPONENT-BASED COMMUNICATION";
+print "COMPONENT-BASED COMMUNICATION (DEPRECIATED)";
 print "-----------------";
 print "";
 

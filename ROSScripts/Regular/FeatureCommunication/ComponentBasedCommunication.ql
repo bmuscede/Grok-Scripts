@@ -12,7 +12,7 @@ $INSTANCE = eset;
 
 //Prints a simple header.
 print "-----------------";
-print "DATAFLOW COMMUNICATION";
+print "INTER-COMPONENT-BASED COMMUNICATION";
 print "-----------------";
 print "";
 

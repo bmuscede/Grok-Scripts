@@ -14,7 +14,7 @@ $INSTANCE = eset;
 
 //Prints a simple header.
 print "-----------------";
-print "DATAFLOW COMMUNICATION";
+print "COMPONENT-BASED-COMMUNICATION COMMUNICATION";
 print "-----------------";
 print "";
 
