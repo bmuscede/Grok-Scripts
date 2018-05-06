@@ -34,7 +34,7 @@ masterRel = varWrite + varInfluence + varInfFunc + call + write;
 masterRel = masterRel+;
 
 //Gets all cases of timer alteration.
-timeAlter = timers o time o tmrCallback o masterRel o publish;
+timerAlter = timers o time o tmrCallback o masterRel o publish;
 
 //Print the results.
 if #timerAlter > 0 {

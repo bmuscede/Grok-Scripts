@@ -9,13 +9,16 @@
 // function is used by multiple topics.
 ////////////////////////////////////////////////////////////////////////
 
-$INSTANCE = eset;
-
 //Prints a simple header.
 print "-----------------";
 print "MULTIPLE PUBLISHERS";
 print "-----------------";
 print "";
+
+//Sets the input file and loads.
+$INSTANCE = eset;
+inputFile = $1;
+getta(inputFile);
 
 //Gets subscribers that are written to.
 direct = publish o subscribe;

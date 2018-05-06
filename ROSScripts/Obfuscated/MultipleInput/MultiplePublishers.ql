@@ -11,13 +11,16 @@
 // This script doesn't resolve MD5 hashes of IDs.
 ////////////////////////////////////////////////////////////////////////
 
-$INSTANCE = eset;
-
 //Prints a simple header.
 print "-----------------";
 print "MULTIPLE PUBLISHERS";
 print "-----------------";
 print "";
+
+//Sets the input file and loads.
+$INSTANCE = eset;
+inputFile = $1;
+getta(inputFile);
 
 //Gets subscribers that are written to.
 direct = publish o subscribe;
