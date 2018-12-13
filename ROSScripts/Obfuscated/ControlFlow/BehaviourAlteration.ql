@@ -21,9 +21,11 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
+transContain = contain+;
+
 //Gets the direct and indirect relations.
-direct = contain o publish o subscribe o call;
-indirect = contain o publish o subscribe o inv contain;
+direct = transContain o publish o subscribe o call;
+indirect = transContain o publish o subscribe o inv transContain;
 indirect = indirect+;
 
 //Generates relations to track the flow of data.

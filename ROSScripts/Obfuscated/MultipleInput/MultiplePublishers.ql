@@ -22,9 +22,11 @@ $INSTANCE = eset;
 inputFile = $1;
 getta(inputFile);
 
+transContain = contain+;
+
 //Gets subscribers that are written to.
 direct = publish o subscribe;
-direct = contain o direct;
+direct = transContain o direct;
 
 //Gets the indegree
 inset = indegree(direct);
@@ -47,7 +49,7 @@ if (#inset == 0){
 for item in dom(inset) {
 	cbFunc = {item} . call;
 	cFunction = cbFunc;
-	cClass = contain . {item};
+	cClass = transContain . {item};
 
 	//Print the item.
 	for subItem in cFunction { for subsubItem in cClass { print "Callback Function " + subItem + " (" + subsubItem + ") - " } }

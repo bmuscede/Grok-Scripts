@@ -21,8 +21,10 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
+transContain = contain+;
+
 //Performs lifting and gets direct/indirect calls.
-direct = contain o (publish o subscribe) o (inv contain);
+direct = transContain o (publish o subscribe) o (inv transContain);
 indirect = (direct+) - direct;
 
 //Finally, resolve the plain-English class names. 

@@ -25,8 +25,10 @@ loopTest = id ($INSTANCE . {"cClass"});
 fullCall = (publish o subscribe) + call;
 fullCall = fullCall+;
 
+transContain = contain+;
+
 //Generates the direct loops.
-classComm = contain o (publish o subscribe) o (inv contain);
+classComm = transContain o (publish o subscribe) o (inv transContain);
 direct = classComm ^ loopTest;
 
 //Gets a list of publishers and subscribers.
@@ -34,7 +36,7 @@ publishSet = $INSTANCE . {"rosPublisher"};
 subscribeSet = $INSTANCE . {"rosSubscriber"};
 
 //Gets the dataflow indirect results.
-comm = contain o publishSet o fullCall o subscribeSet o inv contain;
+comm = transContain o publishSet o fullCall o subscribeSet o inv transContain;
 indirect = comm ^ loopTest;
 indirect = indirect - direct;
 

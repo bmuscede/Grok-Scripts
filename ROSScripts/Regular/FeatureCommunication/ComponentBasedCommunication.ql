@@ -20,8 +20,10 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
+transContain = contain+;
+
 //Gets the direct communications
-direct = contain o (publish o subscribe) o (inv contain);
+direct = transContain o (publish o subscribe) o (inv transContain);
 
 //Combines publishers and subscribers with function calls.
 rosComm = publish o subscribe;
@@ -36,7 +38,7 @@ subscribeSet = $INSTANCE . {"rosSubscriber"};
 comms = publishSet o fullCall o subscribeSet;
 
 //Gets the indirect communication.
-indirect = contain o comms o inv contain;
+indirect = transContain o comms o inv transContain;
 indirect = indirect - direct;
 
 //Prints communication.

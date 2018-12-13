@@ -20,9 +20,11 @@ print "";
 inputFile = $1;
 getta(inputFile);
 
+transContain = contain+;
+
 //Gets the relations important for all phases.
-direct = publish o subscribe o inv contain;
-indirect = contain o publish o subscribe o inv contain;
+direct = publish o subscribe o inv transContain;
+indirect = contain o publish o subscribe o inv transContain;
 indirect = indirect+;
 
 //Gets all the timers and timer callbacks.
